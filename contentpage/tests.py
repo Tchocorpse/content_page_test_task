@@ -86,7 +86,7 @@ class GetPagesTest(APITestCase):
         raw_response = response.content.decode("utf8")
 
         response_prepared = json.loads(raw_response)
-        self.assertEqual(response_prepared["count"], self.pages_num)
+        self.assertEqual(response_prepared["count"], Page.objects.all().count())
 
         response_list = response_prepared["results"]
         for page in response_list:
@@ -111,7 +111,7 @@ class GetPagesTest(APITestCase):
         raw_response = response.content.decode("utf8")
 
         response_prepared = json.loads(raw_response)
-        self.assertEqual(response_prepared["count"], len(self.pages))
+        self.assertEqual(response_prepared["count"], Page.objects.all().count())
 
         response_list = response_prepared["results"]
         for page in response_list:
