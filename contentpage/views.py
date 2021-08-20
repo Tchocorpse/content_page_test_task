@@ -14,8 +14,8 @@ class GetPages(APIView):
         url_pattern = f'{request.build_absolute_uri("/")}pages/'
         pages_raw = Page.objects.all()
 
-        pagination = LimitOffsetPagination()
-        pages = pagination.paginate_queryset(pages_raw, request)
+        paginator = LimitOffsetPagination()
+        pages = paginator.paginate_queryset(pages_raw, request)
 
         result = []
         for page in pages:
@@ -28,7 +28,7 @@ class GetPages(APIView):
             }
             result.append(page_dict)
 
-        return pagination.get_paginated_response(result)
+        return paginator.get_paginated_response(result)
 
 
 class GetPageDetail(APIView):
