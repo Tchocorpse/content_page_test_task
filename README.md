@@ -21,6 +21,9 @@ docker-compose -f dc-start.yml up django-runserver
 
 Please note that after completing both the `docker-compose up` commands you are required to shut down the services `postgres_test_conpage` and `redis_conpage_task` manually, if you wish so.
 
+### Django admin
+Pre generated superuser username: `admin` password: `admin`
+
 ## API examples
 ### request pages
 `curl --location --request GET 'http://0.0.0.0:8000/pages/?limit=1&offset=2'`
