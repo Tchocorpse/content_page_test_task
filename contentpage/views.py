@@ -6,6 +6,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 
 from contentpage.models import Page, BaseContent, PageContent
+from contentpage.serializers import PageSerializer
 from contentpage.tasks import counter_task
 
 
@@ -19,13 +20,8 @@ class GetPages(APIView):
 
         result = []
         for page in pages:
-            page_dict = {
-                'id': page.id,
-                'title': page.title,
-                'created': page.created,
-                'updated': page.updated,
-                'url': f'{url_pattern}{page.id}/'
-            }
+            page_dict = {'url': f'{url_pattern}{page.id}/'}
+            page_dict.update(PageSerializer(page).data)
             result.append(page_dict)
 
         return paginator.get_paginated_response(result)
@@ -42,19 +38,20 @@ class GetPageDetail(APIView):
 
         raw_contents = BaseContent.objects.filter(id__in=contents_id)
 
+        id_content_map = {}
+        for content in raw_contents:
+            id_content_map.update({content.id: content})
+
         content_list = []
         for c_id in contents_id:
-            content = raw_contents.get(pk=c_id)
+            content = id_content_map[c_id]
             content_dict = model_to_dict(content)
             content_list.append(content_dict)
 
-        result = {
-            'page_id': page.id,
-            'page_title': page.title,
-            'created': page.created,
-            'updated': page.updated,
-            'page_content': content_list,
-        }
-        counter_task.apply_async(args=[pk])
+        result = {}
+        result.update(PageSerializer(page).data)
+        result.update({'page_content': content_list})
+
+        counter_task.apply_async(args=[tuple(contents_id)])
 
         return JsonResponse({'page_detail': result}, status=200)

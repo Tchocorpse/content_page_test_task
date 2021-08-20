@@ -158,15 +158,15 @@ class GetPageDetailTest(APITestCase):
             page = self.pages[0]
 
             prepared_response = response.json()["page_detail"]
-            self.assertEqual(prepared_response["page_id"], page.id)
-            self.assertEqual(prepared_response["page_title"], page.title)
+            self.assertEqual(prepared_response["id"], page.id)
+            self.assertEqual(prepared_response["title"], page.title)
             self.assertEqual(
                 prepared_response["created"],
-                page.created.isoformat(timespec="milliseconds").replace("+00:00", "Z"),
+                page.created.isoformat().replace("+00:00", "Z"),
             )
             self.assertEqual(
                 prepared_response["updated"],
-                page.updated.isoformat(timespec="milliseconds").replace("+00:00", "Z"),
+                page.updated.isoformat().replace("+00:00", "Z"),
             )
 
             prepared_page_content = prepared_response["page_content"]
@@ -176,7 +176,8 @@ class GetPageDetailTest(APITestCase):
                 page_content = prepared_page_content[i]
                 self.assertEqual(page_content, test_content)
 
-            mock_task.assert_called_with(args=[page.id])
+            contents_id = tuple([content.id for content in self.content_list])
+            mock_task.assert_called_with(args=[contents_id])
 
 
 class CounterTaskTest(APITestCase):
@@ -186,7 +187,7 @@ class CounterTaskTest(APITestCase):
 
     def test_correct_operation(self):
         old_content_list = copy.deepcopy(self.content_list)
-        counter_task(self.page.id)
+        counter_task(tuple([content.id for content in self.content_list]))
 
         for content in old_content_list:
             new_content = BaseContent.objects.get(pk=content.id)

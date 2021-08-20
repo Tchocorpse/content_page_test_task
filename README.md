@@ -31,12 +31,12 @@ Please note that after completing both the `docker-compose up` commands you are 
     "next": "http://0.0.0.0:8000/pages/?limit=1&offset=3",
     "previous": "http://0.0.0.0:8000/pages/?limit=1&offset=1",
     "results": [
-        {
+        {   
+            "url": "http://0.0.0.0:8000/pages/4/"
             "id": 4,
             "title": "title 4",
             "created": "2021-08-18T19:38:12.305815Z",
             "updated": "2021-08-18T19:38:12.305837Z",
-            "url": "http://0.0.0.0:8000/pages/4/"
         }
     ]
 }
@@ -48,8 +48,8 @@ Please note that after completing both the `docker-compose up` commands you are 
 ```
 {
     "page_detail": {
-        "page_id": 1,
-        "page_title": "title 1",
+        "id": 1,
+        "title": "title 1",
         "created": "2021-08-17T01:42:02.480Z",
         "updated": "2021-08-17T04:07:35.476Z",
         "page_content": [
